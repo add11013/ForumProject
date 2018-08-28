@@ -96,6 +96,7 @@ def make_date():
             w.write(str((row[0],str(row[1]))))
     w.close()
     print('date done.')
+    return data
 
 
 if __name__ == '__main__':
