@@ -1,24 +1,6 @@
-import re
-import numpy as np
-import timeit
 
-file=open("Link.txt","r")
-data=file.read()
-for s in data.split("),"):
-    result=re.findall(r'\d+',s)
-file.close()
+items=[2,4,6,5,7,8]
+list1=[1,3,5,7]
 
-t0 = timeit.default_timer()
-t1 = timeit.default_timer()
-print('without compile', t0-t1)
 
-file=open("Link.txt","r")
-data=file.read()
-for s in data.split("),"):
-    p = re.compile(r'\d+')
-    result=p.findall(s)
-file.close()
-
-t0 = timeit.default_timer()
-t1 = timeit.default_timer()
-print('with compile', t0-t1)
+ins_num=len(list(set(items) & set(list1)))

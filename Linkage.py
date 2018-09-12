@@ -1,4 +1,4 @@
-
+from scipy import spatial
 import timeit
 import ujson
 import re
@@ -81,16 +81,15 @@ def make_date():
         #find all post time (only hour)
         #the result of findall is the 'list' type, so use the [0] to get the string
         date = re.findall(r'(\d+):', row['postdate'])[0]
-        if author == 1:
-            #get the hour index
-            hour = hourIndex.get(date)
-            #if usr_id exists plus 1 with the index
-            #else create a 1x12 zeor vector and plus 1 with index
-            if usr_id in data:
-                data[usr_id][hour-1]+=1
-            else:
-                data[usr_id]=np.zeros(12)
-                data[usr_id][hour-1]+=1
+        #get the hour index
+        hour = hourIndex.get(date)
+        #if usr_id exists plus 1 with the index
+        #else create a 1x12 zeor vector and plus 1 with index
+        if usr_id in data:
+            data[usr_id][hour-1]+=1
+        else:
+            data[usr_id]=np.zeros(12)
+            data[usr_id][hour-1]+=1
     with open('Date.txt','w') as w:
         for row in data.items():
             w.write(str((row[0],str(row[1]))))
@@ -103,6 +102,7 @@ if __name__ == '__main__':
     #set the timer 
     t0 = timeit.default_timer()
     d=make_date()
+    M=1-spatial.distance.cosine(d['3025887'], d['3025887'])
     #stop the timer
     t1 = timeit.default_timer()
     
