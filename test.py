@@ -26,23 +26,105 @@ def get_Usr_id():
     #get the user_id_list
     with open('Usr_id.txt','r') as file:
         usr_id_list=re.findall(r'(\d+)', file.read())
-    print(type(usr_id_list))
     return usr_id_list
 #1
 def get_Article_num():
-
-        # for row in file.readlines():
-        #     print(row)
-    Article_num=0
+    jsonFile=read2json()
+    usr_id_list=get_Usr_id()
+    post={}
+    comment={}
+    Article_num={}
+    for row in jsonFile:
+        author=row['author']
+        usr_id=re.findall(r'\d+', row['usr_id'])[0]
+        #find the number of post
+        if author==1:
+            if usr_id in post:
+                post[usr_id]+=1
+            else:
+                post[usr_id]=1
+        #find the number of comment
+        else:
+            if usr_id in comment:
+                comment[usr_id]+=1
+            else:
+                comment[usr_id]=1
+    #initial Article_num
+    for usr_id in usr_id_list:
+        Article_num[usr_id]=0
+    
+    #calculatet Article_num
+    for usr_id in Article_num:
+        if usr_id in post:
+            Article_num[usr_id]+=post[usr_id]
+        if usr_id in comment:
+            Article_num[usr_id]+=comment[usr_id]
     return Article_num
 # #2
-# def get_Replied_by_prob():
-       
-#     return Replied_by_prob
-# #3
-# def get_Reply_prob():
+def get_Replied_by_prob():
+    jsonFile=read2json()
+    usr_id_list=get_Usr_id()
+    author_0={}
+    author_1={}
+    post={}
+    Replied={}
+    Replied_by_prob={}
     
-#     return Reply_prob
+    #split the author=0 and author=1
+    for row in jsonFile:
+        author=row['author']
+        usr_id=re.findall(r'\d+',row['usr_id'])[0]
+        post_id=row['post_id']
+        if author==0:
+            author_0[post_id]=usr_id
+        else:
+            author_1[post_id]=usr_id
+        
+        #find the number of post
+        if author==1:
+            if usr_id in post:
+                post[usr_id]+=1
+            else:
+                post[usr_id]=1
+
+    #initial Replied_by_prob
+    for usr_id in usr_id_list:
+        Replied[usr_id]=0
+
+    for post_id in author_1:
+        if post_id in author_0:
+            Replied[author_1[post_id]]+=1
+    
+    for usr_id in usr_id_list:
+        if usr_id not in Replied:
+            Replied[usr_id]=0
+        elif usr_id not in post:
+            #when the post is 0, the formula error, so use very small number
+            post[usr_id]=0.000000000000000000000000000001
+        Replied_by_prob[usr_id]=Replied[usr_id]/post[usr_id]
+
+    return Replied_by_prob 
+#3
+def get_Reply_prob():
+    Article_num=get_Article_num()
+    jsonFile=read2json()
+    usr_id_list=get_Usr_id()
+    comment={}
+    Reply_prob={}
+    for row in jsonFile:
+        author=row['author']
+        usr_id=re.findall(r'\d+', row['usr_id'])[0]
+        if author==0:
+            if usr_id in comment:
+                comment[usr_id]+=1
+            else:
+                comment[usr_id]=1
+    
+    for usr_id in usr_id_list:
+        if usr_id not in comment:
+            comment[usr_id]=0
+        Reply_prob[usr_id]=comment[usr_id]/Article_num[usr_id]
+    return Reply_prob
 
 #4
 def get_Deg_centrality(G):
@@ -58,7 +140,10 @@ if __name__ == '__main__':
     #set the timer 
     t0 = timeit.default_timer()
     
-    usr_id_list=get_Usr_id()
+    Article_num=get_Article_num()
+    Replied_by_prob=get_Replied_by_prob()
+    Reply_prob=get_Reply_prob()
+    print(Reply_prob)
     #stop the timer
     t1 = timeit.default_timer()
     

@@ -1,5 +1,5 @@
-import numpy as np
-x=np.zeros(6)
-print(x)
-x[5]=1
-print(x)
+x=2
+if x==1:
+    print(x)
+elif x==2:
+    print(x)
