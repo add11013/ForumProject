@@ -60,7 +60,7 @@ def get_Article_num():
         if usr_id in comment:
             Article_num[usr_id]+=comment[usr_id]
     return Article_num
-# #2
+#2
 def get_Replied_by_prob():
     jsonFile=read2json()
     usr_id_list=get_Usr_id()
@@ -125,7 +125,6 @@ def get_Reply_prob():
             comment[usr_id]=0
         Reply_prob[usr_id]=comment[usr_id]/Article_num[usr_id]
     return Reply_prob
-
 #4
 def get_Deg_centrality(G):
     jsonFile=read2json()    
@@ -143,7 +142,7 @@ if __name__ == '__main__':
     Article_num=get_Article_num()
     Replied_by_prob=get_Replied_by_prob()
     Reply_prob=get_Reply_prob()
-    print(Reply_prob)
+
     #stop the timer
     t1 = timeit.default_timer()
     
