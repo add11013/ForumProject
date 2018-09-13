@@ -135,14 +135,27 @@ def get_Deg_centrality(G):
             Deg_centrality[usr_id]=len(G.adj[usr_id].keys())
     return Deg_centrality
 
+def get_Kmeans_vector():
+    usr_id_list=get_Usr_id()
+    Kmeans_vector={}
+    Article_num=get_Article_num()
+    Replied_by_prob=get_Replied_by_prob()
+    Reply_prob=get_Reply_prob()
+    #Deg_centrality=get_Deg_centrality(G)
+    for usr_id in usr_id_list:
+        Kmeans_vector[usr_id]=[0,0,0,0,0]
+    for usr_id in usr_id_list:
+        Kmeans_vector[usr_id][0]=Article_num[usr_id]
+        Kmeans_vector[usr_id][1]=Replied_by_prob[usr_id]
+        Kmeans_vector[usr_id][2]=Reply_prob[usr_id]
+        #Kmeans_vector[usr_id][3]=Deg_centrality[usr_id]
+    return Kmeans_vector
 if __name__ == '__main__':
     #set the timer 
     t0 = timeit.default_timer()
     
-    Article_num=get_Article_num()
-    Replied_by_prob=get_Replied_by_prob()
-    Reply_prob=get_Reply_prob()
-
+    Kmeans_vector=get_Kmeans_vector()
+    print(Kmeans_vector)
     #stop the timer
     t1 = timeit.default_timer()
     
