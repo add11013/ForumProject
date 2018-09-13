@@ -15,27 +15,34 @@ def read2json():
     return jsonFile
 
 def get_Usr_id():
-    jsonFile=read2json()
-    usr_id_list=[]
-    for row in jsonFile:
-        usr_id = re.findall(r'\d+', row['usr_id'])[0]
-        if usr_id not in usr_id_list:
-            usr_id_list.append(usr_id)
+    #find the user_id
+    # jsonFile=read2json()
+    # usr_id_list=[]
+    # for row in jsonFile:
+    #     usr_id = re.findall(r'\d+', row['usr_id'])[0]
+    #     if usr_id not in usr_id_list:
+    #         usr_id_list.append(usr_id)
+    
+    #get the user_id_list
+    with open('Usr_id.txt','r') as file:
+        usr_id_list=re.findall(r'(\d+)', file.read())
+    print(type(usr_id_list))
     return usr_id_list
 #1
 def get_Article_num():
-    with open('Usr_id.txt','r') as file:
-        for row in file.read():
-            
-    return usr_id
-#2
-def get_Replied_by_prob():
+
+        # for row in file.readlines():
+        #     print(row)
+    Article_num=0
+    return Article_num
+# #2
+# def get_Replied_by_prob():
        
-    return Replied_by_prob
-#3
-def get_Reply_prob():
+#     return Replied_by_prob
+# #3
+# def get_Reply_prob():
     
-    return Reply_prob
+#     return Reply_prob
 
 #4
 def get_Deg_centrality(G):
@@ -51,7 +58,7 @@ if __name__ == '__main__':
     #set the timer 
     t0 = timeit.default_timer()
     
-    usr_id=get_Article_num()
+    usr_id_list=get_Usr_id()
     #stop the timer
     t1 = timeit.default_timer()
     
