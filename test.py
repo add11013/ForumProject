@@ -20,18 +20,18 @@ def sim_b(n1, n2):
     simb = 1-spatial.distance.cosine(d[n1], d[n2])
     return simb
 def sim_a(n1, n2):
-adj_n1 = list(G.adj[n1])
-adj_n2 = list(G.adj[n2])
+    adj_n1 = list(G.adj[n1])
+    adj_n2 = list(G.adj[n2])
 
-ins_num = len(list(set(adj_n1) & set(adj_n2)))
-sima = (ins_num/math.sqrt(len(adj_n1) * len(adj_n2)))
+    ins_num = len(list(set(adj_n1) & set(adj_n2)))
+    sima = (ins_num/math.sqrt(len(adj_n1) * len(adj_n2)))
 
     return sima
 
 def edge_weight(G, a):
-for e in G.edges:
-    e_weight = ((1-a)*sim_b(e[0], e[1]) + (a*sim_a(e[0], e[1])))
-    G.add_edge(e[0], e[1], weight =e_weight)
+    for e in G.edges:
+        e_weight = ((1-a)*sim_b(e[0], e[1]) + (a*sim_a(e[0], e[1])))
+        G.add_edge(e[0], e[1], weight =e_weight)
 
 def read2json():
     s = []
