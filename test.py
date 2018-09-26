@@ -1,7 +1,37 @@
 import timeit
 import ujson
 import re
+import networkx as nx
 
+
+
+def construct_network():
+    file=open("Link.txt","r")
+    G = nx.Graph()
+    data=file.read()
+    for s in data.split("),"):
+        G.add_nodes_from(re.findall(r'(\d+)',s))
+        if re.findall(r'\d+',s)[0] != re.findall(r'\d+',s)[1]:
+            G.add_edge(re.findall(r'\d+',s)[0],re.findall(r'\d+',s)[1])
+    file.close()
+    return G
+
+def sim_b(n1, n2):
+    simb = 1-spatial.distance.cosine(d[n1], d[n2])
+    return simb
+def sim_a(n1, n2):
+adj_n1 = list(G.adj[n1])
+adj_n2 = list(G.adj[n2])
+
+ins_num = len(list(set(adj_n1) & set(adj_n2)))
+sima = (ins_num/math.sqrt(len(adj_n1) * len(adj_n2)))
+
+    return sima
+
+def edge_weight(G, a):
+for e in G.edges:
+    e_weight = ((1-a)*sim_b(e[0], e[1]) + (a*sim_a(e[0], e[1])))
+    G.add_edge(e[0], e[1], weight =e_weight)
 
 def read2json():
     s = []
@@ -135,6 +165,12 @@ def get_Deg_centrality(G):
             Deg_centrality[usr_id]=len(G.adj[usr_id].keys())
     return Deg_centrality
 
+#5
+def get_bet_centrality(G):
+    bet_centrality={}
+    bet_centrality=nx.betweenness_centrality(G)
+    return bet_centrality
+
 def get_Kmeans_vector():
     usr_id_list=get_Usr_id()
     Kmeans_vector={}
@@ -142,6 +178,7 @@ def get_Kmeans_vector():
     Replied_by_prob=get_Replied_by_prob()
     Reply_prob=get_Reply_prob()
     #Deg_centrality=get_Deg_centrality(G)
+    #bet_centrality=get_bet_centrality(G)
     for usr_id in usr_id_list:
         Kmeans_vector[usr_id]=[0,0,0,0,0]
     for usr_id in usr_id_list:
@@ -149,11 +186,12 @@ def get_Kmeans_vector():
         Kmeans_vector[usr_id][1]=Replied_by_prob[usr_id]
         Kmeans_vector[usr_id][2]=Reply_prob[usr_id]
         #Kmeans_vector[usr_id][3]=Deg_centrality[usr_id]
+        #Kmeans_vector[usr_id][4]=bet_centrality[usr_id]
     return Kmeans_vector
 if __name__ == '__main__':
     #set the timer 
     t0 = timeit.default_timer()
-    
+    G=construct_network()
     Kmeans_vector=get_Kmeans_vector()
     print(Kmeans_vector)
     #stop the timer
