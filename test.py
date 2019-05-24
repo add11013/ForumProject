@@ -76,7 +76,7 @@ def get_Article_num():
         #find the number of comment
         else:
             if usr_id in comment:
-                comment[usr_id]+=1
+                comment[usr_id]+=1 
             else:
                 comment[usr_id]=1
     #initial Article_num
@@ -157,18 +157,27 @@ def get_Reply_prob():
     return Reply_prob
 #4
 def get_Deg_centrality(G):
-    jsonFile=read2json()    
+    usr_id_list=get_Usr_id()  
     Deg_centrality={}
-    for row in jsonFile:
-        usr_id = re.findall(r'\d+', row['usr_id'])[0]
-        if usr_id not in Deg_centrality:
-            Deg_centrality[usr_id]=len(G.adj[usr_id].keys())
+    for usr_id in usr_id_list:
+        if usr_id in G.nodes:
+            if usr_id not in Deg_centrality:
+                Deg_centrality[usr_id]=len(G.adj[usr_id].keys())
+        else:
+            Deg_centrality[usr_id]=0
+
     return Deg_centrality
 
 #5
 def get_bet_centrality(G):
     bet_centrality={}
+    usr_id_list=get_Usr_id()
     bet_centrality=nx.betweenness_centrality(G)
+    for usr_id in usr_id_list:
+        if usr_id not in bet_centrality:
+            bet_centrality[usr_id]=0
+    with open('bet_centrality.txt', 'w') as bet:
+    bet.write(bet_centrality)
     return bet_centrality
 
 def get_Kmeans_vector():
@@ -177,16 +186,15 @@ def get_Kmeans_vector():
     Article_num=get_Article_num()
     Replied_by_prob=get_Replied_by_prob()
     Reply_prob=get_Reply_prob()
-    #Deg_centrality=get_Deg_centrality(G)
-    #bet_centrality=get_bet_centrality(G)
+    Deg_centrality=get_Deg_centrality(G)
+    bet_centrality=get_bet_centrality(G)
     for usr_id in usr_id_list:
         Kmeans_vector[usr_id]=[0,0,0,0,0]
-    for usr_id in usr_id_list:
         Kmeans_vector[usr_id][0]=Article_num[usr_id]
         Kmeans_vector[usr_id][1]=Replied_by_prob[usr_id]
         Kmeans_vector[usr_id][2]=Reply_prob[usr_id]
-        #Kmeans_vector[usr_id][3]=Deg_centrality[usr_id]
-        #Kmeans_vector[usr_id][4]=bet_centrality[usr_id]
+        Kmeans_vector[usr_id][3]=Deg_centrality[usr_id]
+        Kmeans_vector[usr_id][4]=bet_centrality[usr_id]
     return Kmeans_vector
 if __name__ == '__main__':
     #set the timer 
